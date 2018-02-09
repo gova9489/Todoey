@@ -11,15 +11,15 @@ import UIKit
 class TodoListTableViewController: UITableViewController {
 
     var itemAray = ["Work on Basics", "Work on resume", "Work on CoreData"]
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+            
+            itemAray = items
+        }
     }
 
     // MARK: - Table view data source
@@ -43,7 +43,6 @@ class TodoListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(itemAray[indexPath.row])
         
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
           
@@ -64,7 +63,9 @@ class TodoListTableViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             self.itemAray.append(textField.text!)
-            print(textField.text!)
+            
+            self.defaults.set(self.itemAray, forKey: "ToDoListArray")
+            
             self.tableView.reloadData()
         }
         
